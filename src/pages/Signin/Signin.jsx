@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import { Link } from 'react-router-dom';
-import { withRouter } from 'react-router';
-import axios from 'axios';
-import socketIo from '../../utils/util';
-import { useSetRecoilState } from 'recoil';
-import { UsernameState } from '../../recoil/atoms';
-import styles from './signin.module.scss';
+import React, { useState } from "react";
+import { Link } from "react-router-dom";
+import { withRouter } from "react-router";
+import axios from "axios";
+import socketIo from "../../utils/util";
+import { useSetRecoilState } from "recoil";
+import { UsernameState } from "../../recoil/atoms";
+import styles from "./signin.module.scss";
 
 function Signin({ history }) {
   const setUsernameState = useSetRecoilState(UsernameState);
-  const [input, setInput] = useState({ username: '', password: '' });
+  const [input, setInput] = useState({ username: "", password: "" });
   const { username, password } = input;
 
   const handleInputChange = (e) => {
@@ -20,26 +20,28 @@ function Signin({ history }) {
   const handleSignin = (e) => {
     e.preventDefault();
 
-    if (username === '' || password === '') {
-      alert('Please fill in the blanks.');
+    if (username === "" || password === "") {
+      alert("Please fill in the blanks.");
       return;
     }
     axios
-      .post('/user/signin', input, { withCredentials: true })
+      .post("/user/signin", input, { withCredentials: true })
       .then((res) => {
         if (res.data.result) {
+          console.log("sign in");
           const username = res.data.packet;
           socketIo.getSocket().then((socket) => {
-            socket.on('socket.ready', (res, cb) => {
+            socket.on("socket.ready", (res, cb) => {
+              console.log("socket is ready");
               if (res) {
-                cb('Socket is connected');
+                cb("Socket is connected");
                 setUsernameState(username);
               }
             });
           });
         } else {
-          alert('Incorrect username or password.');
-          setInput({ username: '', password: '' });
+          alert("Incorrect username or password.");
+          setInput({ username: "", password: "" });
         }
       })
       .catch((err) => console.log(err));

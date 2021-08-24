@@ -2,53 +2,51 @@
   color: grey;
   display: flex;
   justify-content: space-between;
-  margin-bottom: 0.7em;
-  margin-left: 1em;
-  margin-right: 1em;
+  margin-top: 1.5em;
+  margin-bottom: 1.5em;
 }
 
 .styles.chat {
   display: block;
 }
 
+.username {
+  color: black;
+}
+
+.othername {
+  color: #6c2e8b;
+}
+
 .myChat {
-  text-align: right;
   margin-bottom: 0.7em;
-  margin-right: 0.5em;
-  padding: 0.3em 0.7em;
-  color: white;
-  border-radius: 0.7em;
-  width: 60%;
 
   .myChatFrom {
     font-size: 14px;
-    color: white;
   }
 }
 
+.chatContent {
+  color: black;
+}
+
 .myChatToAll {
-  background-color: #6c2e8b;
+  // background-color: #6c2e8b;
 }
 
 .myChatToGroup {
-  background-color: #502eb8;
+  color: #502eb8;
 }
 
 .myChatToWhisper {
-  background-color: grey;
+  color: grey;
 }
 
 .otherChat {
-  margin-left: 0.5em;
   margin-bottom: 0.7em;
-  padding: 0.3em 0.7em;
-  color: white;
-  border-radius: 0.7em;
-  width: 60%;
 
   .otherChatFrom {
     font-size: 14px;
-    color: rgb(160, 160, 160);
     cursor: pointer;
   }
 
@@ -58,13 +56,13 @@
 }
 
 .otherChatToAll {
-  background-color: rgb(69, 21, 94);
+  color: rgb(69, 21, 94);
 }
 
 .otherChatToGroup {
-  background-color: #321c74;
+  color: #321c74;
 }
 
 .otherChatToWhisper {
-  background-color: rgb(68, 68, 68);
+  color: rgb(68, 68, 68);
 }

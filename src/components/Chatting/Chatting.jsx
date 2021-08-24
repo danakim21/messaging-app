@@ -1,12 +1,12 @@
-import React, { useEffect, useState } from 'react';
-import socketIo from '../../utils/util';
-import { useRecoilValue } from 'recoil';
-import { UsernameState } from '../../recoil/atoms';
-import styles from './chatting.module.scss';
-import ScrollToBottom, { useAtTop } from 'react-scroll-to-bottom';
-import Rodal from 'rodal';
-import 'rodal/lib/rodal.css';
-import Chat from '../Chat/Chat';
+import React, { useEffect, useState } from "react";
+import socketIo from "../../utils/util";
+import { useRecoilValue } from "recoil";
+import { UsernameState } from "../../recoil/atoms";
+import styles from "./chatting.module.scss";
+import ScrollToBottom, { useAtTop } from "react-scroll-to-bottom";
+import Rodal from "rodal";
+import "rodal/lib/rodal.css";
+import Chat from "../Chat/Chat";
 
 const Content = ({ handleChatRead, chatData, setCurrentGroup }) => {
   const [top] = useAtTop();
@@ -18,11 +18,11 @@ const Content = ({ handleChatRead, chatData, setCurrentGroup }) => {
   }, [top]);
 
   return (
-    <>
+    <div className={styles.chattingInnerContainer}>
       {chatData.map((chat, i) => (
         <Chat key={i} chat={chat} setCurrentGroup={setCurrentGroup} />
       ))}
-    </>
+    </div>
   );
 };
 
@@ -37,24 +37,24 @@ function Chatting({
   setCurrentGroup,
 }) {
   const username = useRecoilValue(UsernameState);
-  const [roomName, setRoomName] = useState('');
+  const [roomName, setRoomName] = useState("");
   const [roomInfo, setRoomInfo] = useState({});
   const [userEditInput, setUserEditInput] = useState({
-    roomTitle: '',
-    roomPw: '',
+    roomTitle: "",
+    roomPw: "",
     roomCapacity: 0,
   });
   const [userUpdate, setUserUpdate] = useState(false);
   const [showEditModal, setShowEditModal] = useState(false);
-  const [sendTo, setSendTo] = useState('all');
-  const [whisperTarget, setWhisperTarget] = useState('');
-  const [chatInput, setChatInput] = useState('');
+  const [sendTo, setSendTo] = useState("all");
+  const [whisperTarget, setWhisperTarget] = useState("");
+  const [chatInput, setChatInput] = useState("");
   const [chatData, setChatData] = useState([]);
 
   const chatType = [
-    { id: 'all', name: 'All' },
-    { id: 'group', name: 'Group' },
-    { id: 'whisper', name: 'Whisper' },
+    { id: "all", name: "All" },
+    { id: "group", name: "Group" },
+    { id: "whisper", name: "Whisper" },
   ];
 
   const handleEditInputChange = (e) => {
@@ -64,7 +64,7 @@ function Chatting({
 
   const handleEditButton = () => {
     socketIo.getSocket().then((socket) => {
-      socket.emit('room.info', (res) => {
+      socket.emit("room.info", (res) => {
         setRoomInfo(res.packet);
         const { roomTitle, roomCapacity } = res.packet;
         setUserEditInput({ ...userEditInput, roomTitle, roomCapacity });
@@ -81,11 +81,11 @@ function Chatting({
   const handleEditSubmit = (e) => {
     e.preventDefault();
     const { roomTitle, roomPw, roomCapacity } = userEditInput;
-    if (roomTitle === '') {
-      alert('Enter a valid name');
+    if (roomTitle === "") {
+      alert("Enter a valid name");
       return;
     } else if (!roomCapacity) {
-      alert('Enter valid room capacity');
+      alert("Enter valid room capacity");
       return;
     }
     const roomDto = {
@@ -95,12 +95,12 @@ function Chatting({
       roomCapacity: parseInt(roomCapacity),
     };
     socketIo.getSocket().then((socket) => {
-      socket.emit('room.update', roomDto, (res) => {
+      socket.emit("room.update", roomDto, (res) => {
         if (res.result) {
           closeEditModal();
           setUserUpdate(true);
         } else {
-          alert('Failed to leave room');
+          alert("Failed to leave room");
         }
       });
     });
@@ -110,19 +110,19 @@ function Chatting({
     setShowEditModal(false);
     setUserEditInput({
       roomTitle: roomInfo.roomTitle,
-      roomPw: '',
+      roomPw: "",
       roomCapacity: roomInfo.roomCapacity,
     });
   };
 
   const handleLeave = () => {
     socketIo.getSocket().then((socket) => {
-      socket.emit('room.leave', (res) => {
+      socket.emit("room.leave", (res) => {
         if (res.result) {
           socket.off();
           setRoomId(null);
         } else {
-          alert('Failed to leave room');
+          alert("Failed to leave room");
         }
       });
     });
@@ -138,7 +138,7 @@ function Chatting({
 
   const getRoomInfo = () => {
     socketIo.getSocket().then((socket) => {
-      socket.emit('room.info', (res) => {
+      socket.emit("room.info", (res) => {
         setRoomInfo(res.packet);
         const { roomTitle, roomCapacity } = res.packet;
         setRoomName(roomTitle);
@@ -149,7 +149,7 @@ function Chatting({
 
   const refreshRoomInfo = () => {
     socketIo.getSocket().then((socket) => {
-      socket.on('room.info.refresh', (res) => {
+      socket.on("room.info.refresh", (res) => {
         console.log(res);
         if (res.result) {
           setRoomName(res.packet.roomTitle);
@@ -183,8 +183,8 @@ function Chatting({
     const chatDto = {
       from: username,
       to:
-        sendTo === 'whisper'
-          ? whisperTarget === ''
+        sendTo === "whisper"
+          ? whisperTarget === ""
             ? userListWithoutSelf[0]
             : whisperTarget
           : null,
@@ -193,18 +193,18 @@ function Chatting({
     };
 
     socketIo.getSocket().then((socket) => {
-      socket.emit('chat.out', chatDto, (res) => {
+      socket.emit("chat.out", chatDto, (res) => {
         if (!res.result) {
           console.log(res);
         }
       });
     });
-    setChatInput('');
+    setChatInput("");
   };
 
   const fetchUserList = () => {
     socketIo.getSocket().then((socket) => {
-      socket.emit('user.listInRoom', (res) => {
+      socket.emit("user.listInRoom", (res) => {
         if (res.result) {
           setUserList(res.packet);
         }
@@ -214,7 +214,7 @@ function Chatting({
 
   const handleChatRead = () => {
     console.log(chatData);
-    console.log('HANDLE CHAT READ');
+    console.log("HANDLE CHAT READ");
 
     let pastId = null;
     if (chatData.length) {
@@ -222,9 +222,9 @@ function Chatting({
     }
 
     socketIo.getSocket().then((socket) => {
-      socket.emit('chat.read', pastId, (res) => {
+      socket.emit("chat.read", pastId, (res) => {
         if (res.result) {
-          console.log('reading past chat');
+          console.log("reading past chat");
           console.log(pastId);
           console.log(res.packet);
 
@@ -248,7 +248,7 @@ function Chatting({
     setGroupList([]);
 
     socketIo.getSocket().then((socket) => {
-      socket.on('chat.in', (res) => {
+      socket.on("chat.in", (res) => {
         if (res.result) {
           setChatData((prevChatData) => [...prevChatData, res.packet]);
           console.log(res.packet);
@@ -257,7 +257,7 @@ function Chatting({
     });
 
     socketIo.getSocket().then((socket) => {
-      socket.on('user.listInRoom.refresh', (res) => {
+      socket.on("user.listInRoom.refresh", (res) => {
         if (res.result) {
           const { userId, isOnline } = res.packet;
           if (isOnline) {
@@ -314,7 +314,7 @@ function Chatting({
             </option>
           ))}
         </select>
-        {sendTo === 'whisper' && userList.length > 1 && (
+        {sendTo === "whisper" && userList.length > 1 && (
           <select value={whisperTarget} onChange={onWhisperTargetSelect}>
             {userList
               .filter((user) => user !== username)
@@ -331,15 +331,15 @@ function Chatting({
           value={chatInput}
           onChange={handleChatInputChange}
           placeholder={
-            sendTo === 'whisper' && userList.length <= 1
+            sendTo === "whisper" && userList.length <= 1
               ? "Can't send whisper"
-              : sendTo === 'group' && currentGroup === null
-              ? 'Not in a group'
-              : ''
+              : sendTo === "group" && currentGroup === null
+              ? "Not in a group"
+              : ""
           }
           disabled={
-            (sendTo === 'whisper' && userList.length <= 1) ||
-            (sendTo === 'group' && currentGroup === null)
+            (sendTo === "whisper" && userList.length <= 1) ||
+            (sendTo === "group" && currentGroup === null)
           }
         />
         <button type="submit" onClick={handleSendChat}>
