@@ -28,11 +28,9 @@ function Signin({ history }) {
       .post("/user/signin", input, { withCredentials: true })
       .then((res) => {
         if (res.data.result) {
-          console.log("sign in");
           const username = res.data.packet;
           socketIo.getSocket().then((socket) => {
             socket.on("socket.ready", (res, cb) => {
-              console.log("socket is ready");
               if (res) {
                 cb("Socket is connected");
                 setUsernameState(username);
@@ -40,7 +38,11 @@ function Signin({ history }) {
             });
           });
         } else {
-          alert("Incorrect username or password.");
+          if (res.data.code == 9) {
+            alert("The user is already signed in.");
+          } else {
+            alert("Incorrect username or password.");
+          }
           setInput({ username: "", password: "" });
         }
       })
@@ -75,8 +77,7 @@ function Signin({ history }) {
             <button
               type="submit"
               className={styles.signin}
-              onClick={handleSignin}
-            >
+              onClick={handleSignin}>
               Sign In
             </button>
             <Link to="/signup" className={styles.signup}>
