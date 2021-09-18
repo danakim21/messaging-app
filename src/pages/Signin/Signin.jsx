@@ -39,7 +39,7 @@ function Signin({ history }) {
           });
         } else {
           if (res.data.code == 9) {
-            alert("The user is already signed in.");
+            alert("You are already signed in.");
           } else {
             alert("Incorrect username or password.");
           }
